@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Stations Velib</title>
+  </head>
+
+  <body>
+    <h2>Liste des Stations Velib</h2>
+
+    <!-- Creation du tableau pour afficher les donnees -->
+    <table id="stationsTable">
+      <thead>
+        <tr>
+          <th>Station ID</th>
+          <!-- Colonne pour Station ID-->
+          <th>Nom</th>
+          <!-- Colonne pour le nom -->
+          <th>Latitude</th>
+          <!-- Colonne pour la latitude -->
+          <th>Longitude</th>
+          <!-- Colonne pour la longitude -->
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Les donnees des stations seront ajoutees ici -->
+      </tbody>
+    </table>
+
+    <script>
+      // Selectionne le corps du tableau ou les donnees seront inserees
+      const tableBody = document
+        .getElementById("stationsTable")
+        .getElementsByTagName("tbody")[0];
+
+      fetch("http://127.0.0.1:5000/stations") // API Flask qui renvoie les donnees en JSON
+        .then((response) => {
+          // Verifie si la reponse est correcte, sinon lève une erreur
+          if (!response.ok) {
+            throw new Error("Erreur reseau : " + response.status);
+          }
+          return response.json(); // Convertit la reponse en format JSON
+        })
+        .then((data) => {
+          // Pour chaque station reçue dans les donnees JSON
+          data.forEach((station) => {
+            const row = document.createElement("tr"); // cree une nouvelle ligne de tableau
+
+            const stationIdCell = document.createElement("td"); // cree une cellule pour l'ID de la station
+            stationIdCell.textContent = station.station_id; // utilise la cle "station_id" du JSON
+
+            const nameCell = document.createElement("td"); // cree une cellule pour le nom de la station
+            nameCell.textContent = station.name; // utilise la cle "name" du JSON
+
+            const latCell = document.createElement("td"); // cree une cellule pour la latitude de la station
+            latCell.textContent = station.lat; // utilise la cle "lat" du JSON
+
+            const lonCell = document.createElement("td"); // cree une cellule pour la longitude de la station
+            lonCell.textContent = station.lon; // utilise la cle "lon" du JSON
+
+            // ajoute les cellules à la ligne
+            row.appendChild(stationIdCell);
+            row.appendChild(nameCell);
+            row.appendChild(latCell);
+            row.appendChild(lonCell);
+
+            // ajoute la ligne au tableau
+            tableBody.appendChild(row);
+          });
+        });
+    </script>
+  </body>
+</html>
